@@ -4,18 +4,18 @@ def connect_db():
     """ Connect to the news database """
     return psycopg2.connect("dbname=news")
 
-def get_top_three_articles():
+def query_view(view):
     db = connect_db()
     cur = db.cursor()
-    cur.execute('SELECT * from top_three_articles')
-    articles = cur.fetchall()
+    cur.execute('select * from {}'.format(view))
+    results = cur.fetchall()
     cur.close()
     db.close()
 
-    return articles
+    return results
 
 def show_top_three_articles():
-    articles = get_top_three_articles()
+    articles = query_view('top_three_articles')
     text = [ '\nTop three articles of all time are:\n' ]
     article_no = 1
 
@@ -25,18 +25,8 @@ def show_top_three_articles():
 
     print('\n'.join(text))
 
-def get_most_popular_authors():
-    db = connect_db()
-    cur = db.cursor()
-    cur.execute('SELECT * from most_popular_authors')
-    authors = cur.fetchall()
-    cur.close()
-    db.close()
-
-    return authors
-
 def show_most_popular_authors():
-    authors = get_most_popular_authors()
+    authors = query_view('most_popular_authors')
     text = [ '\nThe most popular article authors of all time are:\n' ]
     author_no = 1
 
