@@ -17,42 +17,53 @@ The reporting tool answers following questions about the site's user activity:
 
 ## Instructions ##
 This project is designed to run with python version 2.7.
-In order to run the tool clone the project and navigate to the project directory.
 
-Before running the tool a few views need to be added to the database. The commands for these are:
+1. Clone the project and navigate to the project directory.
 
-```
-create view top_three_articles as
-select title, count (log.time) as num from log, articles
-where path = concat('/article/', slug)
-and status = '200 OK'
-group by title
-order by num desc
-limit 3;
-```
+2. Set up the news database by downloading the newsdata.sql (from Udacity) and 
+   load the data by running:
+
+   ``` psql -d news -f newsdata.sql ```
+
+3. Before running the tool a few views need to be added to the database. 
+   You can import these using the views.sql file provided by running:
+
+   ```psql -d news -f views.sql```
+
+   Or you can run them manualy, the commands are:
+
+   ```
+   create view top_three_articles as
+   select title, count (log.time) as num from log, articles
+   where path = concat('/article/', slug)
+   and status = '200 OK'
+   group by title
+   order by num desc
+   limit 3;
+   ```
 
 
-```
-create view most_popular_authors as 
-select name, count(log.time) as num from authors, articles, log
-where author = authors.id
-and path = concat('/article/', slug)
-and status = '200 OK'
-group by authors.name
-order by num desc;
-```
+   ```
+   create view most_popular_authors as 
+   select name, count(log.time) as num from authors, articles, log
+   where author = authors.id
+   and path = concat('/article/', slug)
+   and status = '200 OK'
+   group by authors.name
+   order by num desc;
+   ```
 
 
-```
-create view more_than_one_percent_errors as
-select date(time) as log_date, round(count(errlog.id) * 100 /count(log.id)::decimal, 2) as perc
-from log left join (select id from log where status LIKE '4%' or status LIKE '5%') as errlog
-on log.id = errlog.id
-group by log_date
-having round(count(errlog.id) * 100 /count(log.id)::decimal, 2) > 1;
-```
+   ```
+   create view more_than_one_percent_errors as
+   select date(time) as log_date, round(count(errlog.id) * 100 /count(log.id)::decimal, 2) as perc
+   from log left join (select id from log where status LIKE '4%' or status LIKE '5%') as errlog
+   on log.id = errlog.id
+   group by log_date
+   having round(count(errlog.id) * 100 /count(log.id)::decimal, 2) > 1;
+   ```
 
-Once all the views are ready, run the following command:
+4. Once all the views are ready, run the following command:
 
-```python log-analysis.py```
+   ```python log-analysis.py```
 
