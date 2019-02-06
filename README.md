@@ -39,7 +39,7 @@ where author = authors.id
 and path = concat('/article/', slug)
 and status = '200 OK'
 group by authors.name
-order by num desc
+order by num desc;
 ```
 
 
