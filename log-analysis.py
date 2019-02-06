@@ -16,7 +16,7 @@ def connect_db():
 def query_view(view):
     db = connect_db()
 
-    if not db is None:
+    if db is not None:
         cur = db.cursor()
         cur.execute('select * from {}'.format(view))
         results = cur.fetchall()
@@ -31,7 +31,7 @@ def show_top_three_articles():
     text = ['\nTop three articles of all time are:\n']
     article_no = 1
 
-    if not articles is None:
+    if articles is not None:
         for article in articles:
             article_info = '{}. {} - {} views'.format(
                 article_no, article[0], str(article[1]))
@@ -46,7 +46,7 @@ def show_most_popular_authors():
     text = ['\nThe most popular article authors of all time are:\n']
     author_no = 1
 
-    if not authors is None:
+    if authors is not None:
         for author in authors:
             author_formatted = '{}. {} - {} views'.format(
                 author_no, author[0], str(author[1]))
@@ -60,7 +60,7 @@ def show_dates_with_many_errors():
     dates = query_view('more_than_one_percent_errors')
     text = ['\nOn following dates more than 1% of requests lead to errors:\n']
 
-    if not dates is None:
+    if dates is not None:
         for date in dates:
             formated_date = date[0].strftime('%B %d, %Y')
             text.append('{} - {}% errors'.format(formated_date, str(date[1])))
