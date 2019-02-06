@@ -36,8 +36,20 @@ def show_most_popular_authors():
 
     print('\n'.join(text))
 
+def show_dates_with_many_errors():
+    dates = query_view('more_than_one_percent_errors')
+    text = [ '\nOn following dates more than 1% of requests lead to errors:\n' ]
+
+    for date in dates:
+        formated_date = date[0].strftime('%B %d, %Y')
+        text.append('{} - {}% errors'.format(formated_date, str(date[1])))
+
+    print('\n'.join(text))
+
 def main():
     show_top_three_articles()
     show_most_popular_authors()
+    show_dates_with_many_errors()
+    print('\n')
 
 main()
